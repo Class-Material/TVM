@@ -21,12 +21,10 @@ def calculate_fv(cash_flows, r):
 def calculate_present_values(cash_flows, r, npv_mode=True):
     present_values = []
     if npv_mode:
-        # Calculate present values for NPV mode
         for t, cf in enumerate(cash_flows, start=0):
             present_value = cf / ((1 + r) ** t)
             present_values.append(present_value)
     else:
-        # Calculate future values for FV mode
         for t, cf in enumerate(cash_flows, start=0):
             future_value = cf * ((1 + r) ** (len(cash_flows) - t - 1))
             present_values.append(future_value)
@@ -93,6 +91,19 @@ def update_timeline(npv_mode=True):
     except ValueError:
         messagebox.showerror("Input Error", "Please enter valid numbers for periods, rate, and cash flows.")
 
+# Function to create cash flow entries
+def create_cash_flow_entries():
+    try:
+        periods = int(period_entry.get()) + 1  # Add 1 to include t=0
+        reset_app()  # Reset before creating new entries
+        for i in range(0, periods):
+            tk.Label(input_frame, text=f"Cash Flow for Period {i}:").grid(row=2+i, column=0, sticky="e")
+            entry = tk.Entry(input_frame)
+            entry.grid(row=2+i, column=1)
+            cash_flows_entries.append(entry)
+    except ValueError:
+        messagebox.showerror("Input Error", "Please enter a valid number of periods.")
+
 # Initialize the main window
 root = tk.Tk()
 root.title("NPV and FV Calculator")
@@ -118,15 +129,6 @@ rate_entry.grid(row=1, column=1)
 
 # Create dynamic input fields for cash flows
 cash_flows_entries = []
-def create_cash_flow_entries():
-    reset_app()  # Reset before creating new entries
-    periods = int(period_entry.get()) + 1  # Add 1 to include t=0
-    for i in range(0, periods):
-        tk.Label(input_frame, text=f"Cash Flow for Period {i}:").grid(row=2+i, column=0, sticky="e")
-        entry = tk.Entry(input_frame)
-        entry.grid(row=2+i, column=1)
-        cash_flows_entries.append(entry)
-
 tk.Button(input_frame, text="Set Periods", command=create_cash_flow_entries).grid(row=0, column=2, padx=5)
 
 # Create buttons to update timeline and calculate NPV/FV

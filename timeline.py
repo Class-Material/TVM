@@ -47,13 +47,13 @@ root.title("NPV and FV Calculator")
 
 # Create frames to organize the layout
 input_frame = tk.Frame(root)
-input_frame.grid(row=0, column=0, padx=10, pady=10)
+input_frame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
 
 result_frame = tk.Frame(root)
-result_frame.grid(row=0, column=1, padx=10, pady=10)
+result_frame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
 
 graph_frame = tk.Frame(root)
-graph_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+graph_frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=10, pady=10)
 
 # Create input fields for number of periods and interest rate
 tk.Label(input_frame, text="Number of Periods:").grid(row=0, column=0, sticky="e")
@@ -68,8 +68,8 @@ rate_entry.grid(row=1, column=1)
 cash_flows_entries = []
 def create_cash_flow_entries():
     global cash_flows_entries
-    for entry in cash_flows_entries:
-        entry.destroy()
+    for widget in cash_flows_entries:
+        widget.destroy()
     cash_flows_entries = []
     try:
         periods = int(period_entry.get())
@@ -88,14 +88,14 @@ tk.Button(input_frame, text="Calculate NPV/FV", command=update_timeline).grid(ro
 
 # Display NPV and FV
 npv_label = tk.Label(result_frame, text="NPV: ")
-npv_label.grid(row=0, column=0)
+npv_label.grid(row=0, column=0, sticky="w")
 fv_label = tk.Label(result_frame, text="FV: ")
-fv_label.grid(row=1, column=0)
+fv_label.grid(row=1, column=0, sticky="w")
 
 # Create a figure for the timeline
 fig, ax = plt.subplots()
 canvas = FigureCanvasTkAgg(fig, master=graph_frame)
-canvas.get_tk_widget().pack()
+canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
 # Run the main loop
 root.mainloop()

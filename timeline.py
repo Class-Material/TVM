@@ -36,6 +36,13 @@ def update_timeline():
         ax.set_title("Cash Flows Timeline")
         ax.set_xlabel("Periods")
         ax.set_ylabel("Cash Flows")
+
+        # Add NPV text at the bottom left under the x-axis
+        ax.text(0, min(cash_flows) - 0.1, f"NPV: {npv:.2f}", verticalalignment='top', horizontalalignment='left', transform=ax.get_xaxis_transform())
+
+        # Add FV text at the bottom right under the x-axis
+        ax.text(periods - 1, min(cash_flows) - 0.1, f"FV: {fv:.2f}", verticalalignment='top', horizontalalignment='right', transform=ax.get_xaxis_transform())
+
         canvas.draw()
     
     except ValueError:

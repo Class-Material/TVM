@@ -20,7 +20,7 @@ def calculate_fv(cash_flows, r):
 # Function to update the timeline and display results
 def update_timeline():
     try:
-        periods = int(period_entry.get())
+        periods = int(period_entry.get()+1)
         rate = float(rate_entry.get())
         cash_flows = [float(cash_flows_entries[i].get()) for i in range(periods)]
         

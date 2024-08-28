@@ -17,6 +17,14 @@ def calculate_fv(cash_flows, r):
         fv += cf * ((1 + r) ** (len(cash_flows) - t))
     return fv
 
+# Function to calculate the present value at each time period
+def calculate_present_values(cash_flows, r):
+    present_values = []
+    for t, cf in enumerate(cash_flows, start=1):
+        present_value = cf / ((1 + r) ** t)
+        present_values.append(present_value)
+    return present_values
+
 # Function to update the timeline and display results
 def update_timeline():
     try:
@@ -26,22 +34,38 @@ def update_timeline():
         
         npv = calculate_npv(cash_flows, rate)
         fv = calculate_fv(cash_flows, rate)
+        present_values = calculate_present_values(cash_flows, rate)
         
         npv_label.config(text=f"NPV: {npv:.2f}")
         fv_label.config(text=f"FV: {fv:.2f}")
         
         # Plot the timeline
         ax.clear()
-        ax.plot(range(1, periods + 1), cash_flows, marker='o')
+        ax.plot(range(1, periods + 1), cash_flows, marker='o', label="Cash Flows")
         ax.set_title("Cash Flows Timeline")
         ax.set_xlabel("Periods")
         ax.set_ylabel("Cash Flows")
 
-        # Add NPV text at the bottom left under the x-axis
+        # Plot the present values on the secondary y-axis
+        ax2 = ax.twinx()
+        ax2.plot(range(1, periods + 1), present_values, marker='x', color='red', label="Present Values")
+        ax2.set_ylabel("Value at t")
+        
+        # Add NPV and FV text
         ax.text(1, min(cash_flows) - 0.1, f"NPV: {npv:.2f}", verticalalignment='top', horizontalalignment='left', transform=ax.get_xaxis_transform())
-
-        # Add FV text at the bottom right under the x-axis
         ax.text(periods, min(cash_flows) - 0.1, f"FV: {fv:.2f}", verticalalignment='top', horizontalalignment='right', transform=ax.get_xaxis_transform())
+
+        # Add Discount Factor and Compound Factor under each period
+        for t in range(1, periods + 1):
+            discount_factor = 1 / ((1 + rate) ** t)
+            compound_factor = (1 + rate) ** t
+
+            ax.text(t, min(cash_flows) - 0.2, f"DF: {discount_factor:.4f}", verticalalignment='top', horizontalalignment='center', transform=ax.get_xaxis_transform())
+            ax.text(t, min(cash_flows) - 0.3, f"CF: {compound_factor:.4f}", verticalalignment='top', horizontalalignment='center', transform=ax.get_xaxis_transform())
+
+        # Show the legend
+        ax.legend(loc="upper left")
+        ax2.legend(loc="upper right")
 
         canvas.draw()
     
